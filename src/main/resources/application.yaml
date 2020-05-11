@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: demo
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss}  %-5level [%thread] [%logger{20}] - %msg%n"
+  level:
+    root: warn
+    ru.mplain: info
