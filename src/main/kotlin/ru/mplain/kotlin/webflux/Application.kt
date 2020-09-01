@@ -1,4 +1,4 @@
-package ru.mplain.spring.boot
+package ru.mplain.kotlin.webflux
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
