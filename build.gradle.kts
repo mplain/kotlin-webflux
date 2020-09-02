@@ -9,9 +9,12 @@ group = "ru.mplain"
 version = "2.0"
 java.sourceCompatibility = JavaVersion.VERSION_14
 
+val spring_fu_version = "0.4.0"
+
 repositories {
     mavenCentral()
     jcenter()
+    maven("https://repo.spring.io/milestone")
 }
 
 dependencies {
@@ -23,11 +26,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 //    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.fu:spring-fu-kofu:$spring_fu_version")
     testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 //    testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     { exclude(group = "org.junit.vintage", module = "junit-vintage-engine") }
-
 }
 
 tasks {

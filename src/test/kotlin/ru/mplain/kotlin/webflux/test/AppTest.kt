@@ -3,19 +3,13 @@ package ru.mplain.kotlin.webflux.test
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matchers
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 import org.springframework.test.web.reactive.server.returnResult
-import ru.mplain.kotlin.webflux.common.*
+import ru.mplain.kotlin.webflux.*
 
 class AppTest : AbstractTest() {
     private val logger = LoggerFactory.getLogger(javaClass)
-
-    @BeforeAll
-    fun populate_database() {
-        for (i in 1..20) post(createEvent())
-    }
 
     @Test
     fun post_missing_time_bad_request() {

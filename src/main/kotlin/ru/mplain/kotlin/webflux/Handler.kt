@@ -1,4 +1,4 @@
-package ru.mplain.kotlin.webflux.reactive
+package ru.mplain.kotlin.webflux
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.reactive.awaitSingle
@@ -9,14 +9,8 @@ import org.springframework.data.mongodb.core.find
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.isEqualTo
-import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.*
-import ru.mplain.kotlin.webflux.common.QUERY_PAGE
-import ru.mplain.kotlin.webflux.common.QUERY_SIZE
-import ru.mplain.kotlin.webflux.common.QUERY_TYPE
-import ru.mplain.kotlin.webflux.domain.Event
 
-@Component
 class Handler(
         val jackson: ObjectMapper,
         factory: ReactiveMongoDatabaseFactory

@@ -1,29 +1,38 @@
 package ru.mplain.kotlin.webflux.test
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.util.CollectionUtils
-import ru.mplain.kotlin.webflux.common.EVENT_DATA
-import ru.mplain.kotlin.webflux.common.EVENT_TIME
-import ru.mplain.kotlin.webflux.common.EVENT_TYPE
-import ru.mplain.kotlin.webflux.domain.Event
+import ru.mplain.kotlin.webflux.app
+import ru.mplain.kotlin.webflux.EVENT_DATA
+import ru.mplain.kotlin.webflux.EVENT_TIME
+import ru.mplain.kotlin.webflux.EVENT_TYPE
+import ru.mplain.kotlin.webflux.Event
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.random.Random
 
-@SpringBootTest
-@AutoConfigureWebTestClient(timeout = "60000")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class AbstractTest {
-    @Autowired
-    lateinit var jackson: ObjectMapper
-    @Autowired
-    lateinit var webTestClient: WebTestClient
+    private val jackson = jacksonObjectMapper()
+    private val webTestClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
+    private lateinit var context: ConfigurableApplicationContext
+
+    @BeforeAll
+    fun beforeAll() {
+        context = app.run(profiles = "test")
+        for (i in 1..20) post(createEvent())
+    }
+
+    @AfterAll
+    fun afterAll() {
+        context.close()
+    }
 
     fun Any.toJson() = jackson.writeValueAsString(this)
 
