@@ -1,1 +1,1 @@
-rootProject.name = "spring-boot-demo-kotlin"
+rootProject.name = "kotlin-webflux-mongodb-demo"

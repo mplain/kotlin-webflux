@@ -8,11 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.util.CollectionUtils
-import ru.mplain.kotlin.webflux.app
-import ru.mplain.kotlin.webflux.EVENT_DATA
-import ru.mplain.kotlin.webflux.EVENT_TIME
-import ru.mplain.kotlin.webflux.EVENT_TYPE
-import ru.mplain.kotlin.webflux.Event
+import ru.mplain.kotlin.webflux.*
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.random.Random
@@ -34,15 +30,11 @@ abstract class AbstractTest {
         context.close()
     }
 
-    fun Any.toJson() = jackson.writeValueAsString(this)
-
-    fun <K, V> Map<K, V>.toMultiValueMap() = mapValues { listOf(it.value?.toString()) }.let(CollectionUtils::toMultiValueMap)
-
-    fun post(event: Any) = webTestClient
+    fun post(body: Any) = webTestClient
             .post()
             .uri("/event")
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(event)
+            .bodyValue(body)
             .exchange()
 
     fun get(params: Map<String, Any>) = webTestClient
@@ -51,17 +43,19 @@ abstract class AbstractTest {
             .exchange()
 
     fun createEvent(
+            vararg extra: Pair<String, String>,
             time: LocalDateTime? = randomDateTime,
             type: String? = randomType,
             data: String? = randomUUID,
-            extra: Pair<String, String>? = null
     ) = mapOf(
             EVENT_TIME to time?.toString(),
             EVENT_TYPE to type,
-            EVENT_DATA to data
-    )
-            .run { if (extra != null) plus(extra) else this }
-            .toJson()
+            EVENT_DATA to data,
+            *extra
+    ).toJson()
+
+    fun Any.toJson(): String = jackson.writeValueAsString(this)
+    fun <K, V> Map<K, V>.toMultiValueMap() = mapValues { listOf(it.value?.toString()) }.let(CollectionUtils::toMultiValueMap)
 
     val randomDateTime get() = LocalDateTime.now().plusSeconds(Random.nextLong(7 * 24 * 60 * 60))
     val randomType get() = Event.Type.values().random().toString()
