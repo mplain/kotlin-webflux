@@ -1,13 +1,11 @@
 package ru.mplain.kotlin.webflux.test
 
-import kotlinx.coroutines.reactive.awaitSingle
-import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
-import org.springframework.test.web.reactive.server.returnResult
-import ru.mplain.kotlin.webflux.common.*
+import org.springframework.test.web.reactive.server.expectBody
+import ru.mplain.kotlin.webflux.*
 
 class AppTest : AbstractTest() {
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -53,7 +51,7 @@ class AppTest : AbstractTest() {
     @Test
     fun post_extra_field_ok_not_stored() {
         val extraKey = "id"
-        post(createEvent(extra = extraKey to "12345"))
+        post(createEvent(extraKey to "12345"))
                 .expectStatus().isOk
                 .expectBody()
                 .jsonPath("$.$extraKey").doesNotExist()
@@ -63,22 +61,22 @@ class AppTest : AbstractTest() {
     }
 
     @Test
-    fun get_no_params_ok(): Unit = runBlocking {
+    fun get_no_params_ok() {
         get(emptyMap())
                 .expectStatus().isOk
-                .returnResult<String>()
+                .expectBody<String>()
+                .returnResult()
                 .responseBody
-                .awaitSingle()
                 .let(logger::info)
     }
 
     @Test
-    fun get_filter_ok(): Unit = runBlocking {
+    fun get_filter_ok() {
         get(mapOf(EVENT_TYPE to randomType))
                 .expectStatus().isOk
-                .returnResult<String>()
+                .expectBody<String>()
+                .returnResult()
                 .responseBody
-                .awaitSingle()
                 .let(logger::info)
     }
 
@@ -92,12 +90,12 @@ class AppTest : AbstractTest() {
     }
 
     @Test
-    fun get_pagination_ok(): Unit = runBlocking {
+    fun get_pagination_ok() {
         get(mapOf(QUERY_PAGE to 2, QUERY_SIZE to 10))
                 .expectStatus().isOk
-                .returnResult<String>()
+                .expectBody<String>()
+                .returnResult()
                 .responseBody
-                .awaitSingle()
                 .let(logger::info)
     }
 

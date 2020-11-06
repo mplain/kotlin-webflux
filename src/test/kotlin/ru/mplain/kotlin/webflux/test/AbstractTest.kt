@@ -8,16 +8,16 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.util.CollectionUtils
-import ru.mplain.kotlin.webflux.common.EVENT_DATA
-import ru.mplain.kotlin.webflux.common.EVENT_TIME
-import ru.mplain.kotlin.webflux.common.EVENT_TYPE
-import ru.mplain.kotlin.webflux.domain.Event
+import ru.mplain.kotlin.webflux.EVENT_DATA
+import ru.mplain.kotlin.webflux.EVENT_TIME
+import ru.mplain.kotlin.webflux.EVENT_TYPE
+import ru.mplain.kotlin.webflux.Event
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.random.Random
 
 @SpringBootTest
-@AutoConfigureWebTestClient(timeout = "60000")
+@AutoConfigureWebTestClient(timeout = "60s")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class AbstractTest {
     @Autowired
@@ -25,15 +25,11 @@ abstract class AbstractTest {
     @Autowired
     lateinit var webTestClient: WebTestClient
 
-    fun Any.toJson() = jackson.writeValueAsString(this)
-
-    fun <K, V> Map<K, V>.toMultiValueMap() = mapValues { listOf(it.value?.toString()) }.let(CollectionUtils::toMultiValueMap)
-
-    fun post(event: Any) = webTestClient
+    fun post(body: Any) = webTestClient
             .post()
             .uri("/event")
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(event)
+            .bodyValue(body)
             .exchange()
 
     fun get(params: Map<String, Any>) = webTestClient
@@ -42,17 +38,19 @@ abstract class AbstractTest {
             .exchange()
 
     fun createEvent(
+            vararg extra: Pair<String, String>,
             time: LocalDateTime? = randomDateTime,
             type: String? = randomType,
             data: String? = randomUUID,
-            extra: Pair<String, String>? = null
     ) = mapOf(
             EVENT_TIME to time?.toString(),
             EVENT_TYPE to type,
-            EVENT_DATA to data
-    )
-            .run { if (extra != null) plus(extra) else this }
-            .toJson()
+            EVENT_DATA to data,
+            *extra
+    ).toJson()
+
+    fun Any.toJson(): String = jackson.writeValueAsString(this)
+    fun <K, V> Map<K, V>.toMultiValueMap() = mapValues { listOf(it.value?.toString()) }.let(CollectionUtils::toMultiValueMap)
 
     val randomDateTime get() = LocalDateTime.now().plusSeconds(Random.nextLong(7 * 24 * 60 * 60))
     val randomType get() = Event.Type.values().random().toString()

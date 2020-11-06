@@ -1,4 +1,4 @@
-package ru.mplain.kotlin.webflux.common
+package ru.mplain.kotlin.webflux
 
 const val EVENT_TIME = "time"
 const val EVENT_TYPE = "type"

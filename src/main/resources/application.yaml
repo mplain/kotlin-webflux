@@ -1,14 +1,8 @@
-server.error:.include-message: always
-
-spring:
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: demo
-
+spring.data.mongodb:
+  database: demo
+  host: localhost
+  port: 27017
 logging:
-  pattern.console: "%d{yyyy-MM-dd HH:mm:ss}  %-5level [%thread] [%logger{20}] - %msg%n"
-  level:
-    root: warn
-    ru.mplain: info
+  pattern.console: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] [%logger{20}] - %msg%n"
+  level.root: info
+server.error:.include-message: always

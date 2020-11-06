@@ -1,8 +1,10 @@
-package ru.mplain.kotlin.webflux.reactive
+package ru.mplain.kotlin.webflux
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.reactive.awaitSingle
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.find
@@ -11,20 +13,16 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.isEqualTo
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.*
-import ru.mplain.kotlin.webflux.common.QUERY_PAGE
-import ru.mplain.kotlin.webflux.common.QUERY_SIZE
-import ru.mplain.kotlin.webflux.common.QUERY_TYPE
-import ru.mplain.kotlin.webflux.domain.Event
 
 @Component
 class Handler(
-        val jackson: ObjectMapper,
+        private val jackson: ObjectMapper,
         factory: ReactiveMongoDatabaseFactory
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
-    val repository: ReactiveMongoTemplate = ReactiveMongoTemplate(factory)
+    private val repository = ReactiveMongoTemplate(factory)
 
-    fun Any.toJson() = jackson.writeValueAsString(this)
+    private fun Any.toJson() = jackson.writeValueAsString(this)
 
     suspend fun post(request: ServerRequest): ServerResponse {
         val body = request.awaitBody<Event>()
@@ -34,20 +32,18 @@ class Handler(
     }
 
     suspend fun get(request: ServerRequest): ServerResponse {
-        fun String.parseNumber() = toLongOrNull()?.takeIf { it > 0 }
         val type = request.queryParamOrNull(QUERY_TYPE)
-        val page = request.queryParamOrNull(QUERY_PAGE)?.parseNumber() ?: 1
-        val size = request.queryParamOrNull(QUERY_SIZE)?.parseNumber() ?: 20
+        val page = request.queryParamOrNull(QUERY_PAGE)?.toIntOrNull()?.takeIf { it > 0 } ?: 1
+        val size = request.queryParamOrNull(QUERY_SIZE)?.toIntOrNull()?.takeIf { it > 0 } ?: 20
         logger.info("GET request received (type: ${type ?: "any"}, page: ${page}, items per page: ${size})")
         val query = if (type == null) Query() else Query(Criteria.where(QUERY_TYPE).isEqualTo(Event.Type(type)))
+        query.with(PageRequest.of(page - 1, size, Sort.by(EVENT_TIME)))
         val result = repository.find<Event>(query)
-                .sort()
-                .skip((page - 1) * size)
-                .take(size)
                 .collectMultimap { it.time.toLocalDate() }
                 .awaitSingle()
+                .toSortedMap()
         logger.info("Retrieving ${result.size} events")
         return if (result.isEmpty()) ServerResponse.notFound().buildAndAwait()
-        else ServerResponse.ok().bodyValueAndAwait(result.toSortedMap())
+        else ServerResponse.ok().bodyValueAndAwait(result)
     }
 }
