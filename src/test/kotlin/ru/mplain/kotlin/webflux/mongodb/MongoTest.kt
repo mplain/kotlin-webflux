@@ -1,13 +1,12 @@
-package ru.mplain.kotlin.webflux.test
+package ru.mplain.kotlin.webflux.mongodb
 
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 import org.springframework.test.web.reactive.server.expectBody
-import ru.mplain.kotlin.webflux.*
 
-class AppTest : AbstractTest() {
+class MongoTest : AbstractMongoTest() {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @BeforeAll
@@ -67,7 +66,7 @@ class AppTest : AbstractTest() {
                 .expectBody<String>()
                 .returnResult()
                 .responseBody
-                .let(logger::info)
+                .also(logger::info)
     }
 
     @Test
@@ -77,7 +76,7 @@ class AppTest : AbstractTest() {
                 .expectBody<String>()
                 .returnResult()
                 .responseBody
-                .let(logger::info)
+                .also(logger::info)
     }
 
     @Test
@@ -96,7 +95,7 @@ class AppTest : AbstractTest() {
                 .expectBody<String>()
                 .returnResult()
                 .responseBody
-                .let(logger::info)
+                .also(logger::info)
     }
 
     @Test

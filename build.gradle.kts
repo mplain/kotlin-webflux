@@ -9,15 +9,14 @@ version = "DEV-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_14
 
 dependencies {
-    implementation(platform(kotlin("bom")))
     implementation(platform("org.springframework.boot:spring-boot-dependencies:2.4.0-RC1"))
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    { exclude(group = "org.junit.vintage", module = "junit-vintage-engine") }
 }
 
 repositories {

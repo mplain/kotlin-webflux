@@ -1,4 +1,4 @@
-package ru.mplain.kotlin.webflux
+package ru.mplain.kotlin.webflux.mongodb
 
 import com.fasterxml.jackson.annotation.JsonValue
 import org.springframework.data.mongodb.core.mapping.Document

@@ -1,4 +1,4 @@
-package ru.mplain.kotlin.webflux
+package ru.mplain.kotlin.webflux.mongodb
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.reactive.awaitSingle
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.*
 
 @Component
-class Handler(
+class MongoHandler(
         private val jackson: ObjectMapper,
         factory: ReactiveMongoDatabaseFactory
 ) {

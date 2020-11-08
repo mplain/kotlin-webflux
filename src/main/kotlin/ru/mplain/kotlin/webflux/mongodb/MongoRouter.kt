@@ -1,4 +1,4 @@
-package ru.mplain.kotlin.webflux
+package ru.mplain.kotlin.webflux.mongodb
 
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -7,13 +7,13 @@ import org.springframework.web.reactive.function.server.coRouter
 import org.springframework.web.server.ServerWebInputException
 
 @Configuration
-class Router {
+class MongoRouter {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @Bean
-    fun routing(handler: Handler) = coRouter {
-        POST("/event", handler::post)
-        GET("/event", handler::get)
+    fun mongoRoutes(mongoHandler: MongoHandler) = coRouter {
+        POST("/event", mongoHandler::post)
+        GET("/event", mongoHandler::get)
 
         onError<Throwable> { e, _ ->
             logger.error(e.message?.substringBefore("\n"))

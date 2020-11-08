@@ -1,4 +1,4 @@
-package ru.mplain.kotlin.webflux.test
+package ru.mplain.kotlin.webflux.mongodb
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.TestInstance
@@ -8,10 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.util.CollectionUtils
-import ru.mplain.kotlin.webflux.EVENT_DATA
-import ru.mplain.kotlin.webflux.EVENT_TIME
-import ru.mplain.kotlin.webflux.EVENT_TYPE
-import ru.mplain.kotlin.webflux.Event
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.random.Random
@@ -19,9 +15,10 @@ import kotlin.random.Random
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "60s")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class AbstractTest {
+abstract class AbstractMongoTest {
     @Autowired
     lateinit var jackson: ObjectMapper
+
     @Autowired
     lateinit var webTestClient: WebTestClient
 

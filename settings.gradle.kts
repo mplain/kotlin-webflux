@@ -1,1 +1,1 @@
-rootProject.name = "kotlin-webflux-mongodb-demo"
+rootProject.name = "kotlin-webflux-demo"
