@@ -2,3 +2,7 @@ logging:
   pattern.console: "%d{yyyy-MM-dd HH:mm:ss} | %-5level | %-25.25thread | %25.25logger{25} | %msg%n"
   level.root: info
 server.error:.include-message: always
+spring:
+  kafka:
+    consumer.group-id: groupId
+    template.default-topic: topic

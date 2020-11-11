@@ -10,13 +10,16 @@ java.sourceCompatibility = JavaVersion.VERSION_14
 
 dependencies {
     implementation(platform("org.springframework.boot:spring-boot-dependencies:2.4.0-RC1"))
+    implementation(platform("org.testcontainers:testcontainers-bom:1.15.0"))
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
+    implementation("org.springframework.kafka:spring-kafka")
+    implementation("io.projectreactor.kafka:reactor-kafka")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.testcontainers:kafka")
+    testImplementation("org.testcontainers:mongodb")
 }
 
 repositories {

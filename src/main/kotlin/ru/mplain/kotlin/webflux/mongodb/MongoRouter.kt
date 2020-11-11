@@ -7,11 +7,13 @@ import org.springframework.web.reactive.function.server.coRouter
 import org.springframework.web.server.ServerWebInputException
 
 @Configuration
-class MongoRouter {
+class MongoRouter(
+        private val mongoHandler: MongoHandler
+) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @Bean
-    fun mongoRoutes(mongoHandler: MongoHandler) = coRouter {
+    fun mongoRoutes() = coRouter {
         POST("/event", mongoHandler::post)
         GET("/event", mongoHandler::get)
 
