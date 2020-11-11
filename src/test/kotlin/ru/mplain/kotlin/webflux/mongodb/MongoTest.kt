@@ -1,7 +1,6 @@
 package ru.mplain.kotlin.webflux.mongodb
 
 import org.hamcrest.Matchers
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -49,11 +48,6 @@ class MongoTest(
     @BeforeAll
     fun setup() {
         for (i in 1..20) webTestClient.post(createEvent())
-    }
-
-    @AfterAll
-    fun cleanup() {
-        container.stop()
     }
 
     @Test

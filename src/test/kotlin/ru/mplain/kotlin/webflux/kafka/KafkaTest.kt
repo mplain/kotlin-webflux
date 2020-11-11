@@ -1,8 +1,6 @@
 package ru.mplain.kotlin.webflux.kafka
 
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
@@ -26,7 +24,6 @@ import java.time.Duration
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @EnableAutoConfiguration(exclude = [MongoReactiveAutoConfiguration::class])
 @MockBean(MongoRouter::class, MongoHandler::class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class KafkaTest {
     val logger = LoggerFactory.getLogger(javaClass)
     val webClient = WebClient.create("http://localhost:8080")
@@ -40,11 +37,6 @@ class KafkaTest {
             container.start()
             registry.add("spring.kafka.bootstrap-servers", container::getBootstrapServers)
         }
-    }
-
-    @AfterAll
-    fun cleanup() {
-        container.stop()
     }
 
     @Test
