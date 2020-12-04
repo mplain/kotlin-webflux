@@ -1,4 +1,4 @@
-package ru.mplain.kotlin.webflux.stream
+package ru.mplain.kotlin.webflux.router
 
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean

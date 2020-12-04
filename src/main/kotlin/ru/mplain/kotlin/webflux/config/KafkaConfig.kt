@@ -1,4 +1,4 @@
-package ru.mplain.kotlin.webflux.kafka
+package ru.mplain.kotlin.webflux.config
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
@@ -14,7 +14,7 @@ import reactor.kafka.receiver.KafkaReceiver
 import reactor.kafka.receiver.ReceiverOptions
 import reactor.kafka.sender.KafkaSender
 import reactor.kafka.sender.SenderOptions
-import ru.mplain.kotlin.webflux.common.Event
+import ru.mplain.kotlin.webflux.model.Event
 
 @Configuration
 class KafkaConfig(
@@ -25,8 +25,13 @@ class KafkaConfig(
 
     @Bean
     fun kafkaSender(): KafkaSender<String, Event> {
+        val bootstrapServers = requireNotNull(kafkaProperties.producer.bootstrapServers
+                ?: kafkaProperties.bootstrapServers)
+        val clientId = kafkaProperties.producer.clientId ?: kafkaProperties.clientId ?: javaClass.packageName
+
         val senderConfig = mapOf(
-                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to kafkaProperties.bootstrapServers,
+                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
+                ProducerConfig.CLIENT_ID_CONFIG to clientId,
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java,
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to JsonSerializer::class.java
         )
@@ -36,15 +41,20 @@ class KafkaConfig(
 
     @Bean
     fun kafkaReceiver(): KafkaReceiver<String, Event> {
+        val bootstrapServers = requireNotNull(kafkaProperties.consumer.bootstrapServers
+                ?: kafkaProperties.bootstrapServers)
+        val groupId = requireNotNull(kafkaProperties.consumer.groupId)
+        val topic = requireNotNull(kafkaProperties.template.defaultTopic)
+
         val receiverConfig = mapOf(
-                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to kafkaProperties.bootstrapServers,
+                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
+                ConsumerConfig.GROUP_ID_CONFIG to groupId,
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
-                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to JsonDeserializer::class.java,
-                ConsumerConfig.GROUP_ID_CONFIG to kafkaProperties.consumer.groupId
+                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to JsonDeserializer::class.java
         )
         val receiverOptions = ReceiverOptions.create<String, Event>(receiverConfig)
                 .withValueDeserializer(JsonDeserializer(Event::class.java))
-                .subscription(setOf(kafkaProperties.template.defaultTopic))
+                .subscription(setOf(topic))
         return KafkaReceiver.create(receiverOptions)
     }
 }

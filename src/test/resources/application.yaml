@@ -1,8 +1,11 @@
 logging:
   pattern.console: "%d{yyyy-MM-dd HH:mm:ss} | %-5level | %-25.25thread | %25.25logger{25} | %msg%n"
-  level.root: info
+  level:
+    root: info
+    ru.mplain: debug
 server.error:.include-message: always
 spring:
+  application.name: kotlin-webflux-demo
   kafka:
-    consumer.group-id: groupId
-    template.default-topic: topic
+    consumer.group-id: mplain
+    template.default-topic: event

@@ -1,4 +1,4 @@
-package ru.mplain.kotlin.webflux.kafka
+package ru.mplain.kotlin.webflux
 
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory
 import org.springframework.http.MediaType
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -15,15 +16,12 @@ import org.springframework.web.reactive.function.client.bodyToFlux
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.utility.DockerImageName
 import reactor.core.publisher.Flux
-import ru.mplain.kotlin.webflux.common.Event
-import ru.mplain.kotlin.webflux.createEvent
-import ru.mplain.kotlin.webflux.mongodb.MongoHandler
-import ru.mplain.kotlin.webflux.mongodb.MongoRouter
+import ru.mplain.kotlin.webflux.model.Event
 import java.time.Duration
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @EnableAutoConfiguration(exclude = [MongoReactiveAutoConfiguration::class])
-@MockBean(MongoRouter::class, MongoHandler::class)
+@MockBean(ReactiveMongoDatabaseFactory::class)
 class KafkaTest {
     val logger = LoggerFactory.getLogger(javaClass)
     val webClient = WebClient.create("http://localhost:8080")
