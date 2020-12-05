@@ -6,6 +6,7 @@ logging:
 server.error:.include-message: always
 spring:
   application.name: kotlin-webflux-demo
+  mustache.suffix: .html
   kafka:
     consumer.group-id: mplain
     template.default-topic: event

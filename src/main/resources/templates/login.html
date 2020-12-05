@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page</title>
+    <meta charset="utf-8">
+</head>
+<body>
+<form id="editForm" method="post">
+    <p align="center">
+        <input name="username" placeholder="username" required type="text">
+        <input name="password" placeholder="password" required type="password">
+        <button type="submit">Submit</button>
+    </p>
+    <div align="center">{{#message}}{{.}}{{/message}}</div>
+</form>
+</body>
+</html>

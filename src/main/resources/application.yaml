@@ -6,3 +6,4 @@ logging:
 server.error:.include-message: always
 spring:
   application.name: kotlin-webflux-demo
+  mustache.suffix: .html
