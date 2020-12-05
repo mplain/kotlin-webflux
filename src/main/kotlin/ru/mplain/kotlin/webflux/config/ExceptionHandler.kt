@@ -16,7 +16,7 @@ import ru.mplain.kotlin.webflux.common.and
 @Component
 @Order(-2)
 class ExceptionHandler(
-        private val jackson: ObjectMapper
+    private val jackson: ObjectMapper
 ) : WebExceptionHandler {
     private val logger = LoggerFactory.getLogger(javaClass)
 

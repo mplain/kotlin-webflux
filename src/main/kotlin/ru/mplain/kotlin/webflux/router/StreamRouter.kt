@@ -17,17 +17,17 @@ class StreamRouter {
         POST("/stream") { request ->
             logger.info("Request received")
             request.bodyToFlux<Any>()
-                    .doOnNext { logger.info("Server received: $it") }
-                    .doOnNext(bridge)
-                    .then(ServerResponse.noContent().build())
+                .doOnNext { logger.info("Server received: $it") }
+                .doOnNext(bridge)
+                .then(ServerResponse.noContent().build())
         }
 
         GET("/stream") {
             val flux = Flux.create<Any> { sink -> bridge = { event -> sink.next(event) } }
-                    .publish()
-                    .autoConnect()
-                    .cache(10)
-                    .doOnNext { logger.info("Server sent: $it") }
+                .publish()
+                .autoConnect()
+                .cache(10)
+                .doOnNext { logger.info("Server sent: $it") }
             ServerResponse.ok().sse().body(flux)
         }
     }

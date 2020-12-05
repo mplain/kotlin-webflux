@@ -32,10 +32,10 @@ class MongoRouter {
     fun mongoRoutes(repository: ReactiveMongoTemplate) = router {
         POST("/event") { request ->
             val result = request.bodyToFlux<Event>()
-                    .doOnNext { logger.info("POST request received: $it") }
-                    .flatMap(repository::save)
-                    .doOnNext { logger.info("Event saved to database: $it") }
-                    .doOnError { logger.error("Error saving event to database: ${it.message}") }
+                .doOnNext { logger.info("POST request received: $it") }
+                .flatMap(repository::save)
+                .doOnNext { logger.info("Event saved to database: $it") }
+                .doOnError { logger.error("Error saving event to database: ${it.message}") }
             ServerResponse.ok().body(result)
         }
 
@@ -47,12 +47,12 @@ class MongoRouter {
             val query = Query().with(PageRequest.of(page - 1, size, Sort.by(EVENT_TIME)))
             if (type != null) query.addCriteria(Criteria.where(QUERY_TYPE).isEqualTo(type))
             repository.find<Event>(query)
-                    .collectMultimap({ it.time.toLocalDate() }, identity(), { TreeMap() })
-                    .doOnNext { logger.info("Retrieving ${it.size} events") }
-                    .flatMap { map ->
-                        if (map.isNotEmpty()) ServerResponse.ok().bodyValue(map)
-                        else ServerResponse.notFound().build()
-                    }
+                .collectMultimap({ it.time.toLocalDate() }, identity(), { TreeMap() })
+                .doOnNext { logger.info("Retrieving ${it.size} events") }
+                .flatMap { map ->
+                    if (map.isNotEmpty()) ServerResponse.ok().bodyValue(map)
+                    else ServerResponse.notFound().build()
+                }
         }
     }
 }

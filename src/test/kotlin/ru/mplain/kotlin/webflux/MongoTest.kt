@@ -29,7 +29,7 @@ import ru.mplain.kotlin.webflux.router.KafkaRouter
 @MockBean(KafkaConfig::class, KafkaRouter::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MongoTest(
-        @Autowired val webTestClient: WebTestClient
+    @Autowired val webTestClient: WebTestClient
 ) {
     val logger = LoggerFactory.getLogger(javaClass)
 
@@ -47,101 +47,101 @@ class MongoTest(
     @BeforeAll
     fun setup() {
         webTestClient
-                .post()
-                .uri("/event")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Flux.range(1, 20).map { createEvent() })
-                .exchange()
+            .post()
+            .uri("/event")
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(Flux.range(1, 20).map { createEvent() })
+            .exchange()
     }
 
     @Test
     fun post_missing_time_bad_request() {
         post(createEvent(time = null))
-                .expectStatus().isBadRequest
-                .expectBody().jsonPath("$.message")
-                .value(Matchers.stringContainsInOrder(EVENT_TIME, "is a non-nullable type"))
+            .expectStatus().isBadRequest
+            .expectBody().jsonPath("$.message")
+            .value(Matchers.stringContainsInOrder(EVENT_TIME, "is a non-nullable type"))
     }
 
     @Test
     fun post_missing_type_bad_request() {
         post(createEvent(type = null))
-                .expectStatus().isBadRequest
-                .expectBody().jsonPath("$.message")
-                .value(Matchers.stringContainsInOrder(EVENT_TYPE, "is a non-nullable type"))
+            .expectStatus().isBadRequest
+            .expectBody().jsonPath("$.message")
+            .value(Matchers.stringContainsInOrder(EVENT_TYPE, "is a non-nullable type"))
     }
 
     @Test
     fun post_missing_data_bad_request() {
         post(createEvent(data = null))
-                .expectStatus().isBadRequest
-                .expectBody().jsonPath("$.message")
-                .value(Matchers.stringContainsInOrder(EVENT_DATA, "is a non-nullable type"))
+            .expectStatus().isBadRequest
+            .expectBody().jsonPath("$.message")
+            .value(Matchers.stringContainsInOrder(EVENT_DATA, "is a non-nullable type"))
     }
 
     @Test
     fun post_invalid_type_bad_request() {
         val invalidType = "typeNA"
         post(createEvent(type = invalidType))
-                .expectStatus().isBadRequest
-                .expectBody().jsonPath("$.message")
-                .value(Matchers.stringContainsInOrder("Cannot deserialize value", "from String \"$invalidType\""))
+            .expectStatus().isBadRequest
+            .expectBody().jsonPath("$.message")
+            .value(Matchers.stringContainsInOrder("Cannot deserialize value", "from String \"$invalidType\""))
     }
 
     @Test
     fun get_no_params_ok() {
         get(emptyMap())
-                .expectStatus().isOk
-                .expectBody<String>()
-                .returnResult()
-                .responseBody
-                .also(logger::info)
+            .expectStatus().isOk
+            .expectBody<String>()
+            .returnResult()
+            .responseBody
+            .also(logger::info)
     }
 
     @Test
     fun get_filter_ok() {
         get(mapOf(EVENT_TYPE to randomType))
-                .expectStatus().isOk
-                .expectBody<String>()
-                .returnResult()
-                .responseBody
-                .also(logger::info)
+            .expectStatus().isOk
+            .expectBody<String>()
+            .returnResult()
+            .responseBody
+            .also(logger::info)
     }
 
     @Test
     fun get_filter_bad_request() {
         val invalidType = "typeNA"
         get(mapOf(QUERY_TYPE to invalidType))
-                .expectStatus().isBadRequest
-                .expectBody().jsonPath("$.message")
-                .isEqualTo("Invalid event type: $invalidType")
+            .expectStatus().isBadRequest
+            .expectBody().jsonPath("$.message")
+            .isEqualTo("Invalid event type: $invalidType")
     }
 
     @Test
     fun get_pagination_ok() {
         get(mapOf(QUERY_PAGE to 2, QUERY_SIZE to 10))
-                .expectStatus().isOk
-                .expectBody<String>()
-                .returnResult()
-                .responseBody
-                .also(logger::info)
+            .expectStatus().isOk
+            .expectBody<String>()
+            .returnResult()
+            .responseBody
+            .also(logger::info)
     }
 
     @Test
     fun get_pagination_not_found() {
         get(mapOf(QUERY_PAGE to 5, QUERY_SIZE to 100))
-                .expectStatus().isNotFound
-                .expectBody().isEmpty
+            .expectStatus().isNotFound
+            .expectBody().isEmpty
     }
 
     fun post(body: Any) = webTestClient
-            .post()
-            .uri("/event")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(body)
-            .exchange()
+        .post()
+        .uri("/event")
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(body)
+        .exchange()
 
     fun get(params: Map<String, Any>) = webTestClient
-            .get()
-            .uri { it.path("/event").queryParams(params.toMultiValueMap()).build() }
-            .exchange()
+        .get()
+        .uri { it.path("/event").queryParams(params.toMultiValueMap()).build() }
+        .exchange()
 }

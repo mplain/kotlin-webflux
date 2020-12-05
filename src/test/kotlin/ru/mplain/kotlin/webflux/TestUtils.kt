@@ -17,15 +17,15 @@ val randomType get() = Event.Type.values().random().toString()
 val randomUUID get() = UUID.randomUUID().toString()
 
 fun createEvent(
-        vararg extra: Pair<String, String>,
-        time: LocalDateTime? = randomDateTime,
-        type: String? = randomType,
-        data: String? = randomUUID
+    vararg extra: Pair<String, String>,
+    time: LocalDateTime? = randomDateTime,
+    type: String? = randomType,
+    data: String? = randomUUID
 ) = mapOf(
-        EVENT_TIME to time?.toString(),
-        EVENT_TYPE to type,
-        EVENT_DATA to data,
-        *extra
+    EVENT_TIME to time?.toString(),
+    EVENT_TYPE to type,
+    EVENT_DATA to data,
+    *extra
 ).toJson()
 
 fun Any.toJson(): String = jackson.writeValueAsString(this)

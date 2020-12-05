@@ -25,8 +25,8 @@ class VideoRouter {
 
         GET("/api/video") {
             val files = Files.list(location)
-                    .map { it.fileName.toString().substringBeforeLast(".") }
-                    .sorted()
+                .map { it.fileName.toString().substringBeforeLast(".") }
+                .sorted()
             ServerResponse.ok().bodyValue(files)
         }
 

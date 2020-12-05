@@ -6,11 +6,11 @@ import java.time.LocalDateTime
 
 @Document
 data class Event(
-        @Id
-        val id: String? = null,
-        val time: LocalDateTime,
-        val type: Type,
-        val data: String
+    @Id
+    val id: String? = null,
+    val time: LocalDateTime,
+    val type: Type,
+    val data: String
 ) : Comparable<Event> {
 
     override fun compareTo(other: Event) = time.compareTo(other.time)
@@ -20,7 +20,7 @@ data class Event(
 
         companion object {
             operator fun invoke(name: String) = runCatching { valueOf(name) }
-                    .getOrElse { throw IllegalArgumentException("Invalid event type: $name") }
+                .getOrElse { throw IllegalArgumentException("Invalid event type: $name") }
         }
     }
 }

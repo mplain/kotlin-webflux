@@ -27,24 +27,24 @@ class StreamTest {
     @Test
     fun test() {
         webClient
-                .get()
-                .uri("/stream")
-                .retrieve()
-                .bodyToFlux<String>()
-                .subscribe { logger.info("Client received: $it") }
+            .get()
+            .uri("/stream")
+            .retrieve()
+            .bodyToFlux<String>()
+            .subscribe { logger.info("Client received: $it") }
 
         val flux = Flux.interval(Duration.ofSeconds(1))
-                .doOnNext { logger.info("Client sent: $it") }
-                .take(5)
+            .doOnNext { logger.info("Client sent: $it") }
+            .take(5)
 
         webClient
-                .post()
-                .uri("/stream")
-                .contentType(APPLICATION_NDJSON)
-                .body(flux)
-                .retrieve()
-                .toBodilessEntity()
-                .doOnSuccess { logger.info("Response received: $it") }
-                .block()
+            .post()
+            .uri("/stream")
+            .contentType(APPLICATION_NDJSON)
+            .body(flux)
+            .retrieve()
+            .toBodilessEntity()
+            .doOnSuccess { logger.info("Response received: $it") }
+            .block()
     }
 }

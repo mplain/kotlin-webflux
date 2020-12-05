@@ -40,25 +40,25 @@ class KafkaTest {
     @Test
     fun test() {
         webClient
-                .get()
-                .uri("/kafka")
-                .retrieve()
-                .bodyToFlux<Event>()
-                .subscribe { logger.info("Subscriber received: $it\n") }
+            .get()
+            .uri("/kafka")
+            .retrieve()
+            .bodyToFlux<Event>()
+            .subscribe { logger.info("Subscriber received: $it\n") }
 
         val flux = Flux.interval(Duration.ofSeconds(1))
-                .map { createEvent() }
-                .doOnNext { logger.info("Producer sent: $it") }
-                .take(5)
+            .map { createEvent() }
+            .doOnNext { logger.info("Producer sent: $it") }
+            .take(5)
 
         webClient
-                .post()
-                .uri("/kafka")
-                .contentType(MediaType.APPLICATION_NDJSON)
-                .body(flux)
-                .retrieve()
-                .bodyToFlux<Long>()
-                .doOnNext { logger.info("Producer received: $it") }
-                .blockLast()
+            .post()
+            .uri("/kafka")
+            .contentType(MediaType.APPLICATION_NDJSON)
+            .body(flux)
+            .retrieve()
+            .bodyToFlux<Long>()
+            .doOnNext { logger.info("Producer received: $it") }
+            .blockLast()
     }
 }
