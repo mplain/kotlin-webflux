@@ -1,13 +1,9 @@
-Привет! Это мой демонстрационный проект микросервиса на Kotlin + Spring WebFlux
+Hi! This is my demo project of a Kotlin + Spring WebFlux mecroservice
 
-Здесь есть примеры использования следующих технологий:
+It demonstrates the use of the following technologies:
 
 - Kafka
-
 - MongoDB
-
 - HTML Rendering
-
 - Server-Sent Events
-
 - Video Streaming
