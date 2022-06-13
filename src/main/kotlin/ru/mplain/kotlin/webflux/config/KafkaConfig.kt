@@ -8,6 +8,7 @@ import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.kafka.config.TopicBuilder
 import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.support.serializer.JsonSerializer
@@ -15,9 +16,11 @@ import reactor.kafka.receiver.KafkaReceiver
 import reactor.kafka.receiver.ReceiverOptions
 import reactor.kafka.sender.KafkaSender
 import reactor.kafka.sender.SenderOptions
+import ru.mplain.kotlin.webflux.common.KAFKA
 import ru.mplain.kotlin.webflux.model.Event
 
 @Configuration
+@Profile(KAFKA)
 class KafkaConfig(
     private val kafkaProperties: KafkaProperties
 ) {

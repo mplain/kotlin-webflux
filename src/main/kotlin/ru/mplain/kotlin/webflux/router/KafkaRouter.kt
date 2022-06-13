@@ -5,14 +5,17 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.util.ClassUtils
 import org.springframework.web.reactive.function.server.*
 import reactor.kafka.receiver.KafkaReceiver
 import reactor.kafka.sender.KafkaSender
 import reactor.kafka.sender.SenderRecord
+import ru.mplain.kotlin.webflux.common.KAFKA
 import ru.mplain.kotlin.webflux.model.Event
 
 @Configuration
+@Profile(KAFKA)
 class KafkaRouter(
     private val kafkaProperties: KafkaProperties,
     private val kafkaSender: KafkaSender<String, Event>,

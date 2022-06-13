@@ -1,16 +1,16 @@
 plugins {
-    kotlin("jvm") version "1.4.21"
-    kotlin("plugin.spring") version "1.4.21"
-    id("org.springframework.boot") version "2.4.1"
+    kotlin("jvm") version "1.6.21"
+    kotlin("plugin.spring") version "1.6.21"
+    id("org.springframework.boot") version "2.7.0"
 }
 
 group = "ru.mplain"
 version = "DEV-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_14
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:2.4.1"))
-    implementation(platform("org.testcontainers:testcontainers-bom:1.15.0"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:2.7.0"))
+    implementation(platform("org.testcontainers:testcontainers-bom:1.17.2"))
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
@@ -26,19 +26,18 @@ dependencies {
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 tasks {
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "14"
+            jvmTarget = "17"
             freeCompilerArgs = listOf("-Xjsr305=strict")
         }
     }
     compileTestKotlin {
         kotlinOptions {
-            jvmTarget = "14"
+            jvmTarget = "17"
             freeCompilerArgs = listOf("-Xjsr305=strict")
         }
     }

@@ -43,7 +43,7 @@ class MongoRouter {
             val page = request.queryParamOrNull(QUERY_PAGE)?.toIntOrNull()?.takeIf { it > 0 } ?: 1
             val size = request.queryParamOrNull(QUERY_SIZE)?.toIntOrNull()?.takeIf { it > 0 } ?: 20
             val type = request.queryParamOrNull(QUERY_TYPE)?.let { Event.Type(it) }
-            logger.info("GET request received (type: ${type ?: "any"}, page: ${page}, items per page: ${size})")
+            logger.info("GET request received (type: ${type ?: "any"}, page: $page, items per page: $size)")
             val query = Query().with(PageRequest.of(page - 1, size, Sort.by(EVENT_TIME)))
             if (type != null) query.addCriteria(Criteria.where(QUERY_TYPE).isEqualTo(type))
             repository.find<Event>(query)

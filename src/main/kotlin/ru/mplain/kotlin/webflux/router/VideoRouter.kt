@@ -8,8 +8,9 @@ import org.springframework.core.io.PathResource
 import org.springframework.util.ClassUtils
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.router
-import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.nameWithoutExtension
 
 @Configuration
 class VideoRouter {
@@ -24,8 +25,8 @@ class VideoRouter {
         }
 
         GET("/api/video") {
-            val files = Files.list(location)
-                .map { it.fileName.toString().substringBeforeLast(".") }
+            val files = location.listDirectoryEntries()
+                .map { it.nameWithoutExtension }
                 .sorted()
             ServerResponse.ok().bodyValue(files)
         }

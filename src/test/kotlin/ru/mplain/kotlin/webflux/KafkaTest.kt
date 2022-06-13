@@ -2,12 +2,10 @@ package ru.mplain.kotlin.webflux
 
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.MediaType
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.web.reactive.function.client.WebClient
@@ -16,18 +14,18 @@ import org.springframework.web.reactive.function.client.bodyToFlux
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.utility.DockerImageName
 import reactor.core.publisher.Flux
+import ru.mplain.kotlin.webflux.common.KAFKA
 import ru.mplain.kotlin.webflux.model.Event
 import java.time.Duration
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@EnableAutoConfiguration(exclude = [MongoReactiveAutoConfiguration::class])
-@MockBean(ReactiveMongoDatabaseFactory::class)
-class KafkaTest {
-    val logger = LoggerFactory.getLogger(javaClass)
-    val webClient = WebClient.create("http://localhost:8080")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles(KAFKA)
+class KafkaTest(@LocalServerPort port: Int) {
+    private val logger = LoggerFactory.getLogger(javaClass)
+    private val webClient = WebClient.create("http://localhost:$port")
 
     companion object {
-        val container = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.3"))
+        private val container = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:latest"))
 
         @JvmStatic
         @DynamicPropertySource

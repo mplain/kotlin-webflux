@@ -11,7 +11,6 @@ import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebExceptionHandler
 import reactor.core.publisher.Mono
-import ru.mplain.kotlin.webflux.common.and
 
 @Component
 @Order(-2)
@@ -38,3 +37,5 @@ class ExceptionHandler(
         exception and message
     }.getOrDefault(responseBodyAsString)
 }
+
+private infix fun Any?.and(other: Any?) = listOfNotNull(this, other).joinToString(": ")

@@ -16,10 +16,10 @@ data class Event(
     override fun compareTo(other: Event) = time.compareTo(other.time)
 
     enum class Type {
-        type1, type2, type3;
+        TYPE1, TYPE2, TYPE3;
 
         companion object {
-            operator fun invoke(name: String) = runCatching { valueOf(name) }
+            operator fun invoke(name: String) = runCatching { valueOf(name.uppercase()) }
                 .getOrElse { throw IllegalArgumentException("Invalid event type: $name") }
         }
     }
